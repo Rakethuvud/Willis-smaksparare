@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
-from index_recipes import canonical_url,candidate_url,jsonld_recipe_nodes,recipe_from_html,parse_sitemap,duration_minutes
+from index_recipes import canonical_url,candidate_url,jsonld_recipe_nodes,recipe_from_html,parse_sitemap,duration_minutes,PRIORITY_URLS
 
 def test_recipe_jsonld_graph():
     html='''<html><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","name":"Test"},{"@type":["CreativeWork","Recipe"],"name":"Korvgryta med ris","recipeIngredient":["550 g falukorv","2 dl grädde"],"recipeYield":"4 portioner","totalTime":"PT35M","aggregateRating":{"ratingValue":"4.5"}}]}</script></html>'''
@@ -30,3 +30,12 @@ def test_duration():
     assert duration_minutes('PT1H25M')==85
     assert duration_minutes('PT15M')==15
     assert duration_minutes('nonsense') is None
+
+
+def test_deep_koket_urls_and_verified_priority_hosts():
+    assert candidate_url('https://www.koket.se/sara_begner/soppor_och_grytor/korv_och_chark/korv_stroganoff/', 'Köket.se')
+    assert candidate_url('https://www.koket.se/kramig-salsiccia-och-saffranspasta/', 'Köket.se')
+    for source, urls in PRIORITY_URLS.items():
+        for url in urls:
+            canon=canonical_url(url, source)
+            assert canon and candidate_url(canon, source)
