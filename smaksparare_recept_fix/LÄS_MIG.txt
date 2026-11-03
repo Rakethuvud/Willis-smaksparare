@@ -1,0 +1,13 @@
+RÄTTNING AV RECEPTINDEXERINGEN
+
+1. Lägg recipes.yml i REPOSITORYROTDIREKT/.github/workflows/recipes.yml
+2. Ersätt requirements.txt i root.
+3. Ersätt scripts/index_recipes.py.
+4. Ersätt tests/test_index_recipes.py.
+5. Gå till Settings > Actions > General > Workflow permissions och välj Read and write permissions.
+6. Under Actions, välj Indexera originalrecept > Run workflow. Läs loggen.
+7. När jobbet är grönt, kontrollera data/recipe-index.json. Pushen av filen startar Pages-publicering.
+
+OBS: Recept hämtas endast från originalsidor som går att läsa enligt webbplatsernas regler.
+Ingen kan garantera att alla recept på källorna indexeras, och ett misslyckat
+jobb ska felsökas via Actions-loggen. Detta arkiv innehåller inga förifyllda recept.
