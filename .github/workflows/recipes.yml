@@ -1,0 +1,65 @@
+
+name: Indexera originalrecept
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 3 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  index-recipes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Hämta projektet
+        uses: actions/checkout@v4
+
+      - name: Installera Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Installera beroenden
+        run: python -m pip install -r requirements.txt
+
+      - name: Kontrollera recepttolkningen
+        run: python -m pytest -q tests/test_index_recipes.py
+
+      - name: Hämta originalrecept
+        run: python scripts/index_recipes.py --max-pages 120 --delay 0.7
+
+      - name: Kontrollera resultatet
+        run: |
+          python -m json.tool data/recipe-index.json > /dev/null
+          python - <<'PYCODE'
+          import json
+          from pathlib import Path
+
+          data = json.loads(
+              Path('data/recipe-index.json').read_text()
+          )
+          count = data.get('indexed_count', 0)
+          print('Inlästa recept:', count)
+          print('Fel:', data.get('source_errors', {}))
+
+          if count < 1:
+              raise SystemExit('Inga recept kunde läsas')
+          PYCODE
+
+      - name: Spara recepten
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          git add data/recipe-index.json data/recipe-index-state.json
+
+          if ! git diff --cached --quiet; then
+            git commit -m 'Uppdatera originalrecept'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
