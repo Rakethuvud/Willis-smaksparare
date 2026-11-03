@@ -34,6 +34,22 @@ USER_AGENT = 'SmaksparareRecipeIndexer/1.0 (respectful-research; +https://github
 SOURCE_HOSTS = {'ICA': 'www.ica.se', 'Arla': 'www.arla.se', 'Köket.se': 'www.koket.se'}
 DEFAULT_SITEMAPS = {name: [f'https://{host}/sitemap.xml', f'https://{host}/sitemap_index.xml'] for name, host in SOURCE_HOSTS.items()}
 RECIPE_TYPES = {'recipe'}
+# Dessa är bara prioriterade WEBBADRESSER: receptdata hämtas alltid live från källan.
+# De behövs för att första körningen ska ge tydliga diagnostiska exempel.
+PRIORITY_URLS = {
+    'ICA': [
+        'https://www.ica.se/recept/korvstroganoff-716092/',
+        'https://www.ica.se/recept/kyckling-piccata-med-citron-och-kapris-751145/',
+    ],
+    'Arla': [
+        'https://www.arla.se/recept/korv-stroganoff/',
+        'https://www.arla.se/recept/kramig-korv-stroganoff/',
+    ],
+    'Köket.se': [
+        'https://www.koket.se/kramig-salsiccia-och-saffranspasta',
+        'https://www.koket.se/sara_begner/soppor_och_grytor/korv_och_chark/korv_stroganoff',
+    ],
+}
 LIMIT_SITEMAPS = 400
 MAX_SITEMAP_BYTES = 10 * 1024 * 1024
 MAX_PAGES = 200
@@ -68,7 +84,10 @@ def candidate_url(url: str, source: str) -> bool:
         return bool(re.fullmatch(r'/recept/[a-z0-9\-]+/', p)) and not any(s in p for s in ['/samling/', '/inspiration/', '/arla-mat/'])
     if source == 'Köket.se':
         # Köket använder även URL:er på toppnivån. Ett Recipe-objekt krävs innan publicering.
-        return len(p.split('/')) in (3, 4) and not any(x in p for x in (
+        # Köket har både korta receptlänkar och äldre adresser i flera nivåer.
+        # Faktisk publicering kräver alltid ett verifierat Schema.org Recipe-objekt.
+        segments = [part for part in p.split('/') if part]
+        return 1 <= len(segments) <= 7 and not any(x in p for x in (
             '/artiklar/', '/program/', '/kockar/', '/inspiration/', '/om-', '/mat-', '/tips/', '/video/'))
     return False
 
@@ -236,6 +255,13 @@ def run(limit: int, pause: float, rediscover: bool, dry_run=False):
             print(f'[{source}] {errors[source]} – skipping source',file=sys.stderr)
     if not policies:
         raise RuntimeError('All sources are unreachable or have unreadable robots.txt; no changes published')
+    # Receptadresserna är endast startpunkter, aldrig ett förinstallerat bibliotek.
+    # All information måste läsas in och valideras från originalwebbsidan.
+    for source, policy in policies.items():
+        live_urls = [canonical_url(u, source) for u in PRIORITY_URLS[source]]
+        first = [u for u in live_urls if u and candidate_url(u, source)
+                 and u not in visited and u not in items and policy.permits(u)]
+        pending[source] = list(dict.fromkeys(first + list(pending.get(source) or [])))
     if rediscover or not any(pending.values()):
         for source, policy in policies.items():
             found = discover_sitemaps(session, source, policy, nap=pause)
