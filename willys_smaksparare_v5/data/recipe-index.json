@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "generated_at": null,
+  "indexed_count": 0,
+  "pending_count": 0,
+  "status": "awaiting_initial_index",
+  "sources": [
+    "ICA",
+    "Arla",
+    "Köket.se"
+  ],
+  "recipes": []
+}
