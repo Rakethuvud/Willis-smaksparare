@@ -1,13 +1,1 @@
-{
-  "schema": 1,
-  "generated_at": null,
-  "indexed_count": 0,
-  "pending_count": 0,
-  "status": "awaiting_initial_index",
-  "sources": [
-    "ICA",
-    "Arla",
-    "Köket.se"
-  ],
-  "recipes": []
-}
+{"schema":1,"generated_at":"2026-11-03T16:21:11+00:00","status":"partial_index","indexed_count":3,"pending_count":0,"sources":["ICA","Arla","Köket.se"],"source_counts":{"ICA":2,"Köket.se":1},"source_errors":{},"recipes":[{"id":"2658976445c620d0f7ea","schema":"Recipe","source":"ICA","url":"https://www.ica.se/recept/korvstroganoff-716092/","title":"Korvstroganoff","description":"Ett klassiskt vardagsrecept som passar alla i hushållet! Strimla falukorv och stek den tillsammans med lök och äpple i klyftor. Tillsätt tomatpuré, tomatkross, grädde och mjöl","minutes":30,"servings":4,"ingredients":["4 port ris eller annat gryn","ca 500 g falukorv eller kycklingstekkorv","1 gul lök","1 äpple","1 msk smör eller margarin","3 msk tomatpuré","500 g krossade tomater","1 dl matlagningsgrädde","1 dl mjölk (gärna 1,5 %)","salt","peppar"],"image":"https://assets.icanet.se/t_ICAseAbsoluteUrl/imagevaultfiles/id_72697/cf_259/korvstroganoff_.jpg","rating":3.6,"categories":["Huvudrätt,Middag"],"keywords":""},{"id":"b2dd75d1d680214df59a","schema":"Recipe","source":"ICA","url":"https://www.ica.se/recept/kyckling-piccata-med-citron-och-kapris-751145/","title":"Kyckling Piccata med citron och kapris","description":"Chicken piccata är en italiensk-amerikansk rätt där tunna kycklingfiléer paneras i mjöl innan de steks. Kycklingen serveras sedan i en len smörsås med citron och kapris.","minutes":30,"servings":4,"ingredients":["500 g kycklingbröstfilé","1 tsk salt","2 krm svartpeppar","1 bananschalottenlök","3 vitlöksklyftor","1 dl vetemjöl","50 g smör","3 msk olivolja","2 1/2 dl vatten","1 kycklingbuljongtärning","1 citron","2 msk bladpersilja","3 msk små kapris"],"image":"https://assets.icanet.se/t_ICAseAbsoluteUrl/yia6z1tmymfzeagbnoon.jpg","rating":5.0,"categories":[],"keywords":""},{"id":"6f8d6c0ec077237bb662","schema":"Recipe","source":"Köket.se","url":"https://www.koket.se/sara_begner/soppor_och_grytor/korv_och_chark/korv_stroganoff/","title":"Korv Stroganoff","description":"Korv Stroganoff på falukorv är en klassiker i det svenska vardagsköket - smakar lika bra i matlådan dagen efter. Tips! Prova även att göra grytan på frukostkorv eller grillkor","minutes":15,"servings":4,"ingredients":["500 g falukorv","1 gul lök","smör, till stekning (eller margarin)","3 msk tomatpuré","2 tsk dijonsenap","2 dl grädde","salt","peppar","persilja, hackad"],"image":"https://img.koket.se/standard-mega/snabbt-och-enkelt-till-vardags.jpg","rating":3.7,"categories":["Huvudrätt"],"keywords":"Korv"}]}
